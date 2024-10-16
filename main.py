@@ -14,7 +14,7 @@ from fastapi.staticfiles import StaticFiles
 # from middlewares import CustomHeaderMiddleware
 from src.database.db import get_db
 from src.config.config import config
-from src.routes import auth
+from src.routes import auth, users
 
 # from src.services.auth import init_blacklist_file
 
@@ -33,7 +33,7 @@ app = FastAPI()
 # )
 
 app.include_router(auth.router, prefix="/api")
-# app.include_router(users.router, prefix="/api")
+app.include_router(users.router, prefix="/api")
 # app.include_router(posts.router, prefix="/api")
 # app.include_router(comments.router, prefix="/api")
 
