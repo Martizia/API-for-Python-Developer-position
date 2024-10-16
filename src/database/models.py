@@ -1,16 +1,22 @@
-from sqlalchemy import (
-    String,
-    Integer,
-    ForeignKey,
-    DateTime,
-    Boolean,
-    func,
-    Table,
-    Column,
-    Enum,
+from fastapi import HTTPException, status
+from sqlalchemy import String, Integer, ForeignKey, DateTime, Boolean, func, event
+from sqlalchemy.orm import (
+    Mapped,
+    mapped_column,
+    relationship,
+    DeclarativeBase,
+    validates,
 )
-from sqlalchemy.orm import Mapped, mapped_column, relationship, DeclarativeBase
 from datetime import date
+from src.services.profanity_filter import contains_profanity
+
+
+def validate_no_profanity(value):
+    if contains_profanity(value):
+        raise HTTPException(
+            status.HTTP_403_FORBIDDEN, detail="Text contain forbidden words"
+        )
+    return value
 
 
 class Base(DeclarativeBase):
@@ -30,6 +36,10 @@ class Post(Base):
     )
     comments = relationship("Comment", cascade="all, delete")
 
+    @validates("title", "description")
+    def validate_no_profanity(self, key, value):
+        return validate_no_profanity(value)
+
 
 class Comment(Base):
     __tablename__ = "comments"
@@ -42,6 +52,10 @@ class Comment(Base):
     created_at: Mapped[date] = mapped_column(
         "created_at", DateTime, default=func.now(), nullable=True
     )
+
+    @validates("text")
+    def validate_no_profanity(self, key, value):
+        return validate_no_profanity(value)
 
 
 class User(Base):
