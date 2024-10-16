@@ -28,6 +28,10 @@ class Post(Base):
     )
     comments = relationship("Comment", cascade="all, delete")
     is_blocked: Mapped[bool] = mapped_column(Boolean, default=False)
+    auto_reply_enabled: Mapped[bool] = mapped_column(
+        Boolean, default=False, nullable=True
+    )
+    auto_reply_delay: Mapped[int] = mapped_column(Integer, default=0)
 
 
 class Comment(Base):
@@ -37,6 +41,9 @@ class Comment(Base):
     user_id: Mapped[int] = mapped_column(Integer, ForeignKey("users.id"), nullable=True)
     post_id: Mapped[int] = mapped_column(
         Integer, ForeignKey("posts.id"), nullable=False
+    )
+    parent_comment_id: Mapped[int] = mapped_column(
+        Integer, ForeignKey("comments.id"), nullable=True
     )
     created_at: Mapped[date] = mapped_column(
         "created_at", DateTime, default=func.now(), nullable=True

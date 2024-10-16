@@ -14,6 +14,8 @@ class PostResponse(BaseModel):
 class PostModel(BaseModel):
     title: str = Field(max_length=150)
     description: str = Field(max_length=250)
+    auto_reply_enabled: bool = Field(default=False)
+    auto_reply_delay: int = Field(default=0)
 
 
 class PostUpdateSchema(BaseModel):
