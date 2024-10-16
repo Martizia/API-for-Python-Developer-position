@@ -11,14 +11,6 @@ from datetime import date
 from src.services.profanity_filter import contains_profanity
 
 
-def validate_no_profanity(value):
-    if contains_profanity(value):
-        raise HTTPException(
-            status.HTTP_403_FORBIDDEN, detail="Text contain forbidden words"
-        )
-    return value
-
-
 class Base(DeclarativeBase):
     pass
 
@@ -35,10 +27,7 @@ class Post(Base):
         "created_at", DateTime, default=func.now(), nullable=True
     )
     comments = relationship("Comment", cascade="all, delete")
-
-    @validates("title", "description")
-    def validate_no_profanity(self, key, value):
-        return validate_no_profanity(value)
+    is_blocked: Mapped[bool] = mapped_column(Boolean, default=False)
 
 
 class Comment(Base):
@@ -52,10 +41,7 @@ class Comment(Base):
     created_at: Mapped[date] = mapped_column(
         "created_at", DateTime, default=func.now(), nullable=True
     )
-
-    @validates("text")
-    def validate_no_profanity(self, key, value):
-        return validate_no_profanity(value)
+    is_blocked: Mapped[bool] = mapped_column(Boolean, default=False)
 
 
 class User(Base):

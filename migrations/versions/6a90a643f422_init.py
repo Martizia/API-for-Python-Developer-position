@@ -1,8 +1,8 @@
-"""profanity_filter
+"""init
 
-Revision ID: e82215594010
-Revises: e8ba9ef92290
-Create Date: 2024-10-16 16:28:40.617143
+Revision ID: 6a90a643f422
+Revises: a5bff8c4190a
+Create Date: 2024-10-16 22:13:57.348415
 
 """
 from typing import Sequence, Union
@@ -12,8 +12,8 @@ import sqlalchemy as sa
 
 
 # revision identifiers, used by Alembic.
-revision: str = 'e82215594010'
-down_revision: Union[str, None] = 'e8ba9ef92290'
+revision: str = '6a90a643f422'
+down_revision: Union[str, None] = 'a5bff8c4190a'
 branch_labels: Union[str, Sequence[str], None] = None
 depends_on: Union[str, Sequence[str], None] = None
 
